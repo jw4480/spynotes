@@ -1,0 +1,86 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <div id="Root">
+            <div class="Container1">
+                <h1 id="QR"></h1>
+                <h2>Welcome to SecureNotes</h2>
+                <h4>Ready to sign in?</h4>
+                <button type="button" id="showqr">Use QR Code</button>
+                <form action="/notes.html?userId${idcode.value}">
+                    <label for="idcode">Have a user ID code? Enter it here</label>
+                    <input type="text" id="idcode" name="idcode" value="abcd-asdk-1234-asda">
+                    <input type="submit" value="Submit">
+                </form>
+                <div id="loadingMessage"> Unable to access video stream (please make sure you have a webcam enabled)</div>
+                <br>
+                <a href="/register.html">Register</a>
+            </div>
+            <div id="videocontainer" style="visibility:hidden">
+                <br>
+                <h4>WebCam Video</h4>
+                <canvas id="videocanvas" hidden></canvas>
+                <div id="output" hidden>
+                    <div id="outputMessage">No QR code detected.</div>
+                    <div hidden><b>Data:</b> <span id="outputData"></span></div>
+                  </div>
+                
+            </div>
+        </div>
+        <script src="./jsQR.js"></script>
+        <script>
+            var showqr = document.getElementById('showqr');
+            showqr.addEventListener('click', showWebcam);
+            function showWebcam(){
+                document.querySelector("#videocontainer").style.visibility = 'visible';
+            }
+
+
+            var video = document.createElement("video");
+            var canvasElement = document.getElementById("videocanvas");
+            var canvas = canvasElement.getContext("2d");
+            var loadingMessage = document.getElementById("loadingMessage");
+            var outputContainer = document.getElementById("output");
+            var outputMessage = document.getElementById("outputMessage");
+            var outputData = document.getElementById("outputData");
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    requestAnimationFrame(tick)
+                    });
+                      
+
+            function tick() {
+                loadingMessage.innerText = "Loading...";
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    loadingMessage.hidden = true;
+                    canvasElement.hidden = false;
+                    outputContainer.hidden = false;
+
+                    canvasElement.height = video.videoHeight;
+                    canvasElement.width = video.videoWidth;
+                    canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                    var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                    });
+                    if (code) {
+                        outputMessage.hidden = true;
+                        outputData.parentElement.hidden = false;
+                        outputData.innerText = code.data;
+                        window.location = `notes.html?userId=${code.data}`;
+                    } else {
+                        outputMessage.hidden = false;
+                        outputData.parentElement.hidden = true;
+                    }
+                }
+                requestAnimationFrame(tick)
+            }
+        </script>
+    </body>
+
+
+</html>

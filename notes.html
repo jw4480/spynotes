@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>Secret Notes</title>
+    </head>
+    <body>
+      <div id="root">
+          <div class="container">
+              <header class="header">
+                  <h1>SecretNotes</h1>
+                  <a href="/index.html">Log Out</a>
+              </header>
+              <br>
+              <form id="noteform">
+                <label for="name">Enter your title here</label>
+                <input type="text" id="name" name="name">
+                <br>
+                <label for="note">Enter your note here</label>
+                <input type="text" id="note" name="note">
+                <input type="submit" onclick="postNote(e)" value="Submit Note">
+            </form>
+              </div>
+          </div>
+      </div>
+    </body>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var userId = urlParams.get('idcode');
+        var formElement = document.forms.noteform;
+        var formData = new FormData(formElement);
+
+        function getAccountInfo(userId) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if(this.readyState == 4 && this.status == 200){
+                        let response = JSON.parse(xhttp.responseText);
+                        console.log(response);
+                    }
+                };
+                xhttp.open("GET", `https://spy-notes-api.rk0.xyz/users/${userId}/notes`, true);
+                xhttp.send();
+        }
+
+        function postNote(e){
+            e.preventDefault();
+            var notename = formData.get('name');
+            console.log(notename);
+            var note = formData.get('note');
+            console.log(note);
+            var data = {title: `notename`, content: `note`};
+            var jsonData = JSON.stringify(data);
+            console.log(jsonData);
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                    if(this.readyState == 4 && this.status == 200){
+                        let response = JSON.parse(xhttp.responseText);
+                        console.log(response);
+                    }
+                };
+                xhttp.open("POST", `https://spy-notes-api.rk0.xyz/users/${userId}/notes`, true);
+                xhttp.send(jsonData);
+        }
+
+        getAccountInfo(userId);
+    </script>
+
+</html>

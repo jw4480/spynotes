@@ -1,0 +1,82 @@
+#root{
+    min-height: fit-content;
+    display: block;
+}
+.container{
+    display: grid;
+    grid-template-areas: "header header" "sidebar content";
+    grid-template-columns: 350px 1fr;
+    grid-template-rows: 64px 1fr;
+    min-height: 100%;
+    background-color: black;
+}
+.header{
+    display: flex;
+    padding: 0px 30px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: grey;
+    border-bottom: hotpink 1px solid;
+}
+header{
+    grid-area: header;
+}
+.header h1{
+    color: white;
+}
+h1{
+    display: block;
+    margin: 20px;
+    color: white;
+}
+.header a{
+    color: white;
+}
+a{
+    text-decoration: underline;
+}
+.container2{
+    display: block;
+    padding: 2px;
+    background-color: #444;
+    color: white;
+}
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    background-color: gray;
+    color: white;
+}
+aside{
+    grid-area: sidebar;
+}
+.notes{
+    margin: 0px;
+    padding: 0px;
+}
+ul{
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1;
+    margin-block-end: 1;
+    padding-inline-start: 30px;
+}
+.notes li:first-of-type{
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    padding: 8px 24px;
+    border-bottom: hotpink;
+}
+.notes li a{
+    border: none;
+    display: inline-block;
+    height: 100%;
+    text-decoration: none;
+    color: white;
+}
+
+li{
+    text-align: center;
+    color: white;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="Root">
+            <div class="Container1">
+                <h2>Welcome to SecureNotes</h2>
+                <h4>Click this button. Yep. That's it. No email address, zip code or credit card number</h4>
+                <button type="button" onclick="getAccountInfo()">Create an account</button>
+                <br>
+                <div id="accountInfo" style="visibility:hidden">
+                    <h4>You can use this QR code to access your notes. Screenshot it or save it as an image.</h2>
+                    <img id ="qr"></p>
+                    <br>
+                    <h4>Alternatively, copy the code below and save it somewhere safe.</h4>
+                    <p id ="code"></p>
+                </div>
+                <br>
+                <a href="/index.html">Sign In</a>
+            </div>
+        </div>
+
+        <script>
+            function getAccountInfo() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if(this.readyState == 4 && this.status == 200){
+                        let response = JSON.parse(xhttp.responseText);
+                        document.querySelector("#accountInfo").style.visibility = 'visible';
+                        document.getElementById("code").innerHTML = response.userId;
+                        document.getElementById("qr").src = `https://spy-notes-api.rk0.xyz/users/${response.userId}/qr`
+                    }
+                };
+                xhttp.open("POST", "https://spy-notes-api.rk0.xyz/users", true);
+                xhttp.send();
+                
+            }
+        </script>
+    </body>
+</html>
